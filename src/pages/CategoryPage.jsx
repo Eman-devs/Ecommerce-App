@@ -1,0 +1,46 @@
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+
+
+function CategoryPage() {
+
+    const { categoryName } = useParams();
+    const [category, setCategory] = useState([])
+
+    useEffect(() => {
+        axios.get(`https://fakestoreapi.com/products/category/${categoryName}`).then(json => setCategory(json.data))
+    }, [categoryName])
+    return (
+        <section class="text-gray-600 body-font">
+            <div class="container px-5 py-24 mx-auto">
+                <div class="flex flex-wrap -m-4">
+                    <div className="flex flex-col text-center w-full ">
+                        <h2 className="text-xs text-green-500 tracking-widest font-medium title-font mb-1">PRODUCTS HERE</h2>
+                        <h1 className="sm:text-3xl text-2xl font-medium title-font text-gray-900">{categoryName.toUpperCase()}</h1>
+                    </div>
+                    {
+                        category.map((val, key) =>
+                            <div class="lg:w-1/4 md:w-1/2 p-4 w-full border border-opacity-50 mb-4 cursor-pointer" key={key} data-aos="flip-left" data-aos-duration="2000">
+                                <Link to={`/products/${val.id}`}>
+                                    <a class="block relative h-48 rounded overflow-hidden">
+                                        <img alt="ecommerce" class="object-contain object-center w-full h-full block" src={val.image} />
+                                    </a>
+                                    <div class="mt-4">
+                                        <h3 class="text-gray-500 text-xs tracking-widest title-font mb-1">{val.category}</h3>
+                                        <h2 class="text-gray-900 title-font text-lg font-medium">{val.title}</h2>
+                                        <p class="mt-1">$-{val.price}</p>
+                                        <button className="flex mx-auto mt-16 text-white bg-gray-900 border-0 py-2 px-8 focus:outline-none hover:bg-gray-500 rounded text-lg">View Product</button>
+                                    </div>
+                                </Link>
+                            </div>
+                        )
+                    }
+                </div>
+            </div>
+        </section>
+    )
+}
+
+export default CategoryPage
